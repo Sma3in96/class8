@@ -35,7 +35,7 @@ const emits = defineEmits(['close', 'add']);
 
 const title = ref('');
 const selectedColor = ref('#ff0000');
-const colors = ref(['#ff0000', '#00ff00', '#0000ff', '#ffff00', '#ff00ff']);
+const colors = ref(['#ff0000', '#333333', '#0000ff', '#002f6c', '#ff00ff']);
 const description = ref('');
 
 const close = () => {

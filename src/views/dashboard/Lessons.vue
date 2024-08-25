@@ -2,9 +2,9 @@
   <div class='calendar' >
     <div class='demo-app-main'>
       <FullCalendar
+        ref='calendar'
         class='demo-app-calendar'
         :options='calendarOptions'
-        
       >
         <template #eventContent='arg'>
           <b>{{ arg.timeText }}</b>
@@ -26,14 +26,13 @@
       @edit='handleEditEvent'
       @remove='handleRemoveEvent'
     />
-    
   </div>
-  <totu v-if="showTuto" class="tuto" />
-  <Mybutton :text="showText" @click="showTutoFunction" />
+  <Mybutton text="Save changes" @click="saveEvents" />
+
 </template>
 
 <script setup>
-import { ref, reactive } from 'vue'
+import { ref, reactive, onMounted, onBeforeMount } from 'vue'
 import FullCalendar from '@fullcalendar/vue3'
 import dayGridPlugin from '@fullcalendar/daygrid'
 import timeGridPlugin from '@fullcalendar/timegrid'
@@ -43,16 +42,34 @@ import promptAdd from '../../components/prompt.vue'
 import editPrompt from '../../components/editPrompt.vue'
 
 import totu from '../../components/totu.vue'
+import { addData, queryFirestore, setData } from '../../Services/Requests/firestoreRequests'
+import { useUserStore } from '../../stores/userStore'
 
 let eventGuid = 0
 let todayStr = new Date().toISOString().replace(/T.*$/, '') // YYYY-MM-DD of today
-
-const INITIAL_EVENTS = [
-]
+const events = ref([])
+const calendar = ref(null)
 
 function createEventId() {
   return String(eventGuid++)
 }
+
+const INITIAL_EVENTS = ref([])
+
+// const INITIAL_EVENTS = [{
+//   id: createEventId(),
+//   title: 'All Day Event',
+//   start: todayStr,
+//   end: todayStr,
+//   allDay: true,
+// },
+// {
+//   id: createEventId(),
+//   title: 'Long Event',
+//   start: todayStr,
+//   end: new Date(todayStr).getTime() + 60 * 60 * 24 * 1000 * 5,
+// }
+// ]
 
 
 const calendarOptions = reactive({
@@ -64,22 +81,20 @@ const calendarOptions = reactive({
   headerToolbar: {
   },
   initialView: 'dayGridMonth',
-  initialEvents: INITIAL_EVENTS,
+  events: INITIAL_EVENTS.value,
   editable: true,
   selectable: true,
   selectMirror: true,
   dayMaxEvents: true,
   weekends: true,
   select: handleDateSelect,
-  eventClick: handleEventClick
-  // eventsSet: handleEvents
+  eventClick: handleEventClick,
 })
 
-const currentEvents = ref([])
+
 const isPromptVisible = ref(false);
 const isEventActionsVisible = ref(false);
 let selectInfo;
-let selectEvent;
 const selectedEvent = ref(null);
 
 
@@ -97,7 +112,7 @@ function handleAddEvent(infos) {
   if (infos) {
     const calendarApi = selectInfo.view.calendar;
     calendarApi.unselect();
-    calendarApi.addEvent({
+    const newEvent = {
       id: createEventId(),
       title: infos.title,
       start: selectInfo.startStr,
@@ -105,20 +120,25 @@ function handleAddEvent(infos) {
       allDay: selectInfo.allDay,
       backgroundColor: infos.color,
       description: infos.description
-    });
+    }
+    events.value.push(newEvent);
+    calendarApi.addEvent(newEvent);
   }
+
+  
 }
 
 function handleEditEvent(event) {
   const newTitle = prompt('Enter new title for the event:', event.title);
   const newDescription = prompt('Enter new description for the event:', event.extendedProps.description);
-
   if (newTitle !== null) {
     event.setProp('title', newTitle);
+    events.value[event.id].title = newTitle;
   }
 
   if (newDescription !== null) {
     event.setExtendedProp('description', newDescription);
+    events.value[event.id].description = newDescription;
   }
 }
 
@@ -126,24 +146,63 @@ function handleEditEvent(event) {
 function handleRemoveEvent(event) {
   if (confirm(`Are you sure you want to delete the event '${event.title}'`)) {
     event.remove();
+    events.value = events.value.filter(iEvent => iEvent.id!== event.id);
   }
 }
 
-const showTuto = ref(false);
-const showText = ref("Click to see how to add a new event")
 
-function showTutoFunction() {
-  showTuto.value = !showTuto.value;
-  setTimeout(() => {
-    showTuto.value = false;
-    showText.value = "Click to see how to add a new event"
-  }, 30000);
-  if (showTuto.value == true) {
-  showText.value = "close the tutorial"
-  } else {
-    showText.value = "Click to see how to add a new event"
+
+const userStore = useUserStore();
+
+const fetchEvents = async () => {
+  try {
+    const res = await queryFirestore("Events", { where: [["userID", "==", userStore.$state.userID ]]})
+    events.value = res.at(0).events;
+    
+    const calendarApi = calendar.value.getApi();
+
+    events.value.forEach(item => {
+      calendarApi.addEvent({
+        id: createEventId(),
+        title: item.title,
+        start: item.start,
+        end: item.end,
+        backgroundColor: item.backgroundColor,
+        allDay: item.allDay,
+        extendedProps: {
+          description: item.description,
+        }
+      })
+    })
+
+    
+  } catch(error) {
+    console.error(error);
   }
+}
 
+onMounted( async () => {
+  fetchEvents();
+})
+
+const saveEvents = async () => {
+  try {
+    const res = await setData("Events", userStore.$state.userID ,{
+      userID: userStore.$state.userID,
+      events: events.value.map(event => ({
+        id: event.id,
+        title: event.title,
+        start: event.start,
+        end: event.end,
+        allDay: event.allDay,
+        backgroundColor: event.backgroundColor,
+        description: event.description
+      }))
+    }, false);
+    console.log("Data saved successfully", res);
+  } catch(error) {
+    console.error(error);
+  }
 }
 
 
