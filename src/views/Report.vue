@@ -67,7 +67,8 @@ const filterStudent = async () => {
       id: counter++,
       name: item.name,
       studentId: item.id,
-      grades: item.grades
+      grades: item.grades,
+      daysSkipped: item.daysSkipped
     }))
   } catch (error) {
     console.error('Error fetching students:', error);
@@ -84,7 +85,6 @@ const handlegenerate = (id) => {
   const student = students.value.find(item => item.id == id);
   student.className =  classOptions.value.find(item => item.value == selectedClass.value).text
   student.teacherRemarks = "good job, need imporvement"
-  student.daysSkipped = 15
   console.log(student);
   
 
