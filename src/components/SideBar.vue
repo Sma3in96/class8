@@ -1,52 +1,52 @@
 <template>
-  <div :id="checked ? 'nav-bar' : 'nav-bar2'">
+  <div :id="!checked ? 'nav-bar' : 'nav-bar2'">
     <div>
-    <div :id="checked ? 'nav-header' : 'nav-header2'">
-      <span> {{ username }}</span>
-      <img :class="checked ? 'avatar' : 'avatar2'" src="../images/avatar.jpeg" alt="avatar">
+    <div :id="!checked ? 'nav-header' : 'nav-header2'">
+      <span>  {{ username }}</span>
+      <!-- <img :class="checked ? 'avatar' : 'avatar2'" src="../images/avatar.jpeg" alt="avatar"> -->
       <div>
         <box-icon id="menuicon" name="menu" v-show="!checked" @click="navBarSwitch" color="#fff"></box-icon>
-        <box-icon name='arrow-back' v-show="checked" @click="navBarSwitch" rotate='0' color="#fff"></box-icon>
+        <box-icon name='menu' v-show="checked" @click="navBarSwitch" rotate='0' color="#fff"></box-icon>
       </div>
     </div>
     
-    <div :id="checked ? 'nav-content' : 'nav-content2'">
+    <div :id="!checked ? 'nav-content' : 'nav-content2'">
       <hr/>
       <router-link :to="{ name: 'dashboard' }">
-      <div :class="checked ? 'nav-button' : 'nav-button2'">
+      <div :class="!checked ? 'nav-button' : 'nav-button2'">
         <box-icon color="#fff" type="solid" name="dashboard"></box-icon>&nbsp;&nbsp;
         <span>Dashboard</span>
       </div>
       </router-link>
       <router-link :to="{ name: 'attendance' }">
-        <div :class="checked ? 'nav-button' : 'nav-button2'">
+        <div :class="!checked ? 'nav-button' : 'nav-button2'">
           <box-icon color="#fff" type="solid" name="calendar"></box-icon>&nbsp;&nbsp;
           <span>Attendance</span>
         </div>
       </router-link>
       <router-link :to="{ name: 'grades' }">
-        <div :class="checked ? 'nav-button' : 'nav-button2'">
+        <div :class="!checked ? 'nav-button' : 'nav-button2'">
           <box-icon color="#fff" type="solid" name="medal" animation="thada"></box-icon>&nbsp;&nbsp;
           <span>Grades</span>
         </div>
       </router-link>
 
       <router-link :to="{ name: 'lessons' }">
-        <div :class="checked ? 'nav-button' : 'nav-button2'">
+        <div :class="!checked ? 'nav-button' : 'nav-button2'">
           <box-icon color="#fff" type="solid" name="book-open" animation="htada"></box-icon>&nbsp;&nbsp;
           <span>Lessons</span>
         </div>
       </router-link>
 
-      <router-link :to="{ name: 'filestoring' }">
+      <!-- <router-link :to="{ name: 'filestoring' }">
         <div :class="checked ? 'nav-button' : 'nav-button2'">
           <box-icon color="#fff" type="solid" name="file-pdf"></box-icon>&nbsp;&nbsp;
           <span>My Files</span>
         </div>
-      </router-link>
+      </router-link> -->
 
       <router-link :to="{ name: 'report' }">
-        <div :class="checked ? 'nav-button' : 'nav-button2'">
+        <div :class="!checked ? 'nav-button' : 'nav-button2'">
           <box-icon color="#fff" type="solid" name="report"></box-icon>&nbsp;&nbsp;
           <span>Report</span>
         </div>
@@ -55,7 +55,7 @@
       <hr />
     </div>
   </div>
-    <div :class="checked ? 'nav-button' : 'nav-button2'" @click="handleLogOut">
+    <div :class="!checked ? 'nav-button' : 'nav-button2'" @click="handleLogOut">
         <box-icon color="#fff" type="solid" name="exit"></box-icon>&nbsp;&nbsp;
         <a id="logout" href="#">Logout</a>
     </div>
@@ -105,8 +105,7 @@ const handleLogOut = async function () {
   transition: width 0.3s ease-in-out;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
-  height: 100vh;
+  /* height: 100hv; */
   margin-right: 10px;
 }
 
@@ -157,7 +156,7 @@ a {
 
 
 #nav-bar2 {
-  background-color: #2a2d3b;
+  background-color: #1b0d97;
   height: 100vh;
   color: #fff;
   padding: 10px;
@@ -165,8 +164,8 @@ a {
   overflow: hidden;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
-  height: 100vh;
+  /* justify-content: space-between; */
+  /* height: 95vh; */
   margin-right: 10px;
 }
 

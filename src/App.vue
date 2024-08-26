@@ -23,7 +23,7 @@ const noSideBar = computed( () => route.name === 'notfound' || route.name === 's
 
 </script>
 
-<style>
+<style scoped>
 .app {
   display: flex;
 }

@@ -1,5 +1,9 @@
 <template>
+  <div class="bottom">
+  <Mybutton text="Save changes" class="saveButton" @click="saveEvents" />
+  </div>
   <div class='calendar' >
+    
     <div class='demo-app-main'>
       <FullCalendar
         ref='calendar'
@@ -27,8 +31,7 @@
       @remove='handleRemoveEvent'
     />
   </div>
-  <Mybutton text="Save changes" @click="saveEvents" />
-
+  
 </template>
 
 <script setup>
@@ -251,6 +254,22 @@ const saveEvents = async () => {
   font-size: 12px;
 }
 
+.bottom {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 50px;
+  background-color: #f5f5f5;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+}
+
+.saveButton {
+  align-items: center;
+  margin-bottom: 10px;
+}
 
 
 </style>

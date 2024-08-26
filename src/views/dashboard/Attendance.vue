@@ -27,7 +27,6 @@
       </tr>
     </table>
 
-    <!-- <errorMessage message="Wrong" /> -->
     <div>
       &nbsp;&nbsp;&nbsp;&nbsp;
     </div>
@@ -111,6 +110,7 @@ onMounted(() => {
   margin: 0 auto;
   padding: 20px;
   font-family: Arial, sans-serif;
+  height: 100hv;
 }
 
 h1 {

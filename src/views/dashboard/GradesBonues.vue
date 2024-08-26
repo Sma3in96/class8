@@ -1,6 +1,6 @@
 <template>
   <div class="students-list">
-    <h1>Students Attendance</h1>
+    <h1>Students Grades</h1>
 
     <div class="filters">
       <select v-model="selectedClass" class="class-selector" @change="filterStudent">
@@ -17,23 +17,18 @@
         <th id="table_Name">Name</th>
         <th id="table_grade_1">
           <span>Exam 1</span> &nbsp;
-          <box-icon @click="editgrade1 = !editgrade1" name="edit" type="solid" :color="!editgrade1 ? '#D32F2F' : '#9E9E9E'"
-            ></box-icon>
         </th>
         <th id="table_grade_1">
           <span>Exam 2</span>
-          <box-icon @click="editgrade2 = !editgrade2" name="edit" type="solid"
-            :color="!editgrade2 ? '#D32F2F' : '#9E9E9E'" ></box-icon>
         </th>
         <th id="table_grade_2">
           <span>Exam 3</span>
-          <box-icon @click="editgrade3 = !editgrade3" name="edit" type="solid"
-            :color="!editgrade3 ? '#D32F2F' : '#9E9E9E'" ></box-icon>
         </th>
         <th id="table_grade_3">
           <span>Exam 4</span>
-          <box-icon @click="editgrade4 = !editgrade4" name="edit" type="solid"
-            :color="!editgrade4 ? '#D32F2F' : '#9E9E9E'" ></box-icon>
+        </th>
+        <th id="table_grade_4">Average</th>
+        <th>
         </th>
       </tr>
       <tr v-for="student in students" :key="student.id">
@@ -41,23 +36,30 @@
         <td>{{ student.name }}</td>
         <td>
           <div class="grade_input">
-            <input class="input_1" type="number" v-model="student.grades[0]" :disabled="!editgrade1" />
+            <input class="input_1" type="number"  v-model="student.grades[0]" step="0.01" :disabled="!student.editgrade" />
           </div>
         </td>
         <td>
           <div class="grade_input">
-            <input :disabled="!editgrade2" class="input_1" type="number" step="0.01" v-model="student.grades[1]" />
+            <input :disabled="!student.editgrade" class="input_1" type="number" step="0.01" v-model="student.grades[1]" />
           </div>
         </td>
         <td>
           <div class="grade_input">
-            <input :disabled="!editgrade3" class="input_1" type="number" step="0.01" v-model="student.grades[2]" />
+            <input :disabled="!student.editgrade" class="input_1"  type="number" step="0.01" v-model="student.grades[2]" />
           </div>
         </td>
         <td>
           <div class="grade_input">
-            <input :disabled="!editgrade4" class="input_1" type="number" step="0.01" v-model="student.grades[3]" />
+            <input :disabled="!student.editgrade" class="input_1" type="number" step="0.01" v-model="student.grades[3]" />
           </div>
+        </td>
+        <td></td>
+        <td>
+          <box-icon @click="student.editgrade = true" name="edit" type="solid"
+            v-show="!student.editgrade" ></box-icon>
+          <box-icon @click="student.editgrade = false " name="save" type="solid"
+            v-show="student.editgrade" ></box-icon>
         </td>
       </tr>
     </table>
@@ -66,13 +68,13 @@
     <div>
       &nbsp;&nbsp;&nbsp;&nbsp;
     </div>
-    <button @click="submitAttendance" class="submit-button">Submit Attendance</button>
+    <button @click="submitAttendance" class="submit-button">Submit</button>
   </div>
 </template>
 
 <script setup>
 import { ref, onMounted } from 'vue';
-import { addData, queryFirestore } from '../../Services/Requests/firestoreRequests';
+import { addData, queryFirestore, setData } from '../../Services/Requests/firestoreRequests';
 import { useUserStore } from '../../stores/userStore';
 
 const students = ref([
@@ -82,10 +84,8 @@ const userStore = useUserStore();
 const selectedClass = ref('');
 const classOptions = ref([])
 const selectedDate = ref(new Date().toISOString().split('T')[0]);
-const editgrade1 = ref(false);
-const editgrade2 = ref(false);
-const editgrade3 = ref(false);
-const editgrade4 = ref(false);
+
+
 
 const fetchClassOptions = async () => {
   try {
@@ -105,7 +105,8 @@ const filterStudent = async () => {
       id: counter++,
       name: item.name,
       studentId: item.id,
-      grades: item.grades.map(grade => grade === '' ? "--empty--" : grade)
+      grades: item.grades !== [] ? item.grades : [0, 0, 0, 0 ],
+      editgrade: false
     }))
     console.log(students.value);
   } catch (error) {
@@ -114,24 +115,20 @@ const filterStudent = async () => {
 }
 
 const submitAttendance = async () => {
-  const todayAttendance = {
-    date: selectedDate.value,
-    classId: selectedClass.value,
-    students: students.value.map(student => ({
-      studentId: student.studentId,
-      absent: student.absent || false
-    }))
-  }
-  console.log(todayAttendance);
-  const res = await addData("Attendance", todayAttendance)
-  if (res.status == "Ok") {
-    alert("Attendance submitted successfully!")
-
-  } else {
-    alert("Failed to submit attendance!")
-    console.error("Failed to submit attendance:", res.message);
+  console.log(students.value);
+  
+  try {
+    const updatePromises = students.value.map(item =>
+      setData('Student', item.studentId, { grades: item.grades }, true)
+    );
+    
+    await Promise.all(updatePromises);
+    // prompt.("the grades are updated ")
+  } catch (error) {
+    console.error('Error updating students:', error);
   }
 };
+
 
 
 

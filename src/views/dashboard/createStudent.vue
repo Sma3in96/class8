@@ -93,7 +93,7 @@ const submitForm = async () => {
       createdAt: new Date(),
       daysSkipped: 0,
       remarks: '',
-      grades: ''
+      grades: []
     })
 
     if (res.status === "Ok") {
