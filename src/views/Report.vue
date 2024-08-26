@@ -1,6 +1,6 @@
 <template>
   <div class="students-list">
-    <h1>Students Attendance</h1>
+    <h1>Students Report</h1>
 
     <div class="filters">
       <select v-model="selectedClass" class="class-selector" @change="filterStudent">

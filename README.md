@@ -1,7 +1,5 @@
-## **Markdown Code for the Course Management System**
 
-
-# Course Management System
+## Course Management System
 
 **Overview**
 
@@ -59,8 +57,8 @@ This project is a Vue.js-based course management system that leverages email for
 |---|---|
 | Attendance Tracking | Record and manage student attendance. |
 | Grade Management | Assign and track student grades for assignments and exams. |
-| Class Management | Create, edit, and delete classes. |
-| Student Management | Add, remove, and view student information. |
+| Class Management | Create classes. |
+| Student Management | Add and view student information. |
 | Calendar Management | View and manage class schedules and deadlines. |
 | Report Generation | Generate various reports, such as student progress reports and class attendance summaries. |
 
@@ -68,7 +66,6 @@ This project is a Vue.js-based course management system that leverages email for
 
 | Feature | Description |
 |---|---|
-| Email Communication | Send emails to students and instructors. |
 | User Authentication | Implement user authentication using Firebase Authentication. |
 | Data Storage | Store course, student, assignment, attendance, and grade data in Firebase Firestore. |
 

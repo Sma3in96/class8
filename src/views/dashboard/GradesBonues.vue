@@ -27,7 +27,7 @@
         <th id="table_grade_3">
           <span>Exam 4</span>
         </th>
-        <th id="table_grade_4">Average</th>
+        
         <th>
         </th>
       </tr>
@@ -54,7 +54,6 @@
             <input :disabled="!student.editgrade" class="input_1" type="number" step="0.01" v-model="student.grades[3]" />
           </div>
         </td>
-        <td></td>
         <td>
           <box-icon @click="student.editgrade = true" name="edit" type="solid"
             v-show="!student.editgrade" ></box-icon>
