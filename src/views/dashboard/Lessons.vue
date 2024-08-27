@@ -203,6 +203,7 @@ const saveEvents = async () => {
       }))
     }, false);
     console.log("Data saved successfully", res);
+    alert("Data saved successfully")
   } catch(error) {
     console.error(error);
   }

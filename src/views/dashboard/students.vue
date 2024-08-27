@@ -19,8 +19,8 @@
         <th>Parent Phone</th>
         <th>Birth Date</th>
         <th>days skipped</th>
-        <th>Remarks</th>
-        <th>Notes</th>
+        <!-- <th>Remarks</th> -->
+        <th>Grades</th>
       </tr>
       <tr v-for="student in students" :key="student.id">
         <td :id="'table_ID_' + student.id">{{ student.id }}</td>
@@ -28,8 +28,8 @@
         <td>{{ student.parentPhone }}</td>
         <td>{{ student.birthDate }}</td>
         <td>{{ student.daysSkipped }}</td>
-        <td>{{ student.remarks }}</td>
-        <td>{{ student.grades }}</td>
+        <!-- <td>{{ student.remarks }}</td> -->
+        <td>{{ student.grades.join(' | ') }}</td>
       </tr>
 
     </table>

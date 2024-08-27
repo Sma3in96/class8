@@ -12,13 +12,13 @@
     </router-link>
   </div>
   <div class="child">
-  <router-link to="/dashboard/home/createStudent">
-      Schedule an Exam
+  <router-link to="/dashboard/Grades">
+      Grades
     </router-link>
   </div>
   <div class="child">
-  <router-link to="/dashboard/FileStoring">
-      My Documents
+  <router-link to="/dashboard/Lessons">
+      My calendar
     </router-link>
   </div>
 

@@ -122,7 +122,7 @@ const submitAttendance = async () => {
     );
     
     await Promise.all(updatePromises);
-    // prompt.("the grades are updated ")
+    alert("Student grades updated")
   } catch (error) {
     console.error('Error updating students:', error);
   }
